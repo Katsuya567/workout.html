@@ -1,43 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Free Workout App 💪</title>
+
 <style>
 body {
   font-family: Arial, sans-serif;
   text-align: center;
   margin: 0;
   padding: 0;
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fad0c4, #fbc2eb);
-  background-size: 400% 400%;
-  animation: gradientBG 10s ease infinite;
   color: #333;
+
+  background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+  background-size: 400% 400%;
+  animation: gradientMove 10s ease infinite;
 }
 
-/* Animated background */
-@keyframes gradientBG {
+@keyframes gradientMove {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Add a soft pattern overlay */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: radial-gradient(rgba(255,255,255,0.2) 2px, transparent 2px);
-  background-size: 40px 40px;
-  pointer-events: none;
-  z-index: -1;
+.container {
+  background: rgba(255,255,255,0.3);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 25px;
+  width: 90%;
+  max-width: 500px;
+  margin: 50px auto;
 }
 
 button {
-  padding: 12px 25px;
-  font-size: 18px;
-  background: white;
+  padding: 12px 20px;
+  font-size: 16px;
   border: none;
   border-radius: 20px;
   cursor: pointer;
+  background: white;
   transition: 0.3s;
 }
 
@@ -46,4 +47,86 @@ button:hover {
   color: white;
   transform: scale(1.1);
 }
+
+input[type="checkbox"] {
+  transform: scale(1.3);
+  margin: 10px;
+}
 </style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>💪 Free Workout App</h1>
+<p>Workout for your health — No payments needed!</p>
+
+<h2>Today's Exercises</h2>
+
+<div>
+  <label><input type="checkbox"> 10 Pushups</label><br>
+  <label><input type="checkbox"> 15 Squats</label><br>
+  <label><input type="checkbox"> 30s Plank</label><br>
+  <label><input type="checkbox"> 20 Jumping Jacks</label><br>
+</div>
+
+<br>
+
+<button onclick="startTimer()">Start 30s Timer ⏱</button>
+<p id="timer"></p>
+
+<br>
+
+<button onclick="saveProgress()">Save Progress ✅</button>
+
+</div>
+
+<script>
+
+function startTimer() {
+  let time = 30;
+  let timerDisplay = document.getElementById("timer");
+
+  timerDisplay.innerHTML = time + " seconds left";
+
+  let countdown = setInterval(function() {
+    time--;
+    timerDisplay.innerHTML = time + " seconds left";
+
+    if (time <= 0) {
+      clearInterval(countdown);
+      timerDisplay.innerHTML = "✅ Timer Finished!";
+    }
+  }, 1000);
+}
+
+function saveProgress() {
+  let checkboxes = document.querySelectorAll("input[type='checkbox']");
+  let completed = [];
+
+  checkboxes.forEach((box) => {
+    completed.push(box.checked);
+  });
+
+  localStorage.setItem("workoutProgress", JSON.stringify(completed));
+
+  alert("Progress Saved 💪");
+}
+
+// Load saved progress when page opens
+window.onload = function() {
+  let saved = JSON.parse(localStorage.getItem("workoutProgress"));
+
+  if (saved) {
+    let checkboxes = document.querySelectorAll("input[type='checkbox']");
+    checkboxes.forEach((box, index) => {
+      box.checked = saved[index];
+    });
+  }
+}
+
+</script>
+
+</body>
+</html>
